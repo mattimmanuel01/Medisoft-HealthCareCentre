@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-12 bg-secondary border-secondary pt-3" style="min-height:200px;margin-top:-10px;">
+        <form class="form-inline" action="/search" method= "POST">
+            <div class="form-group p-2" style="width:100%">
+                <div class="col-12 mb-2">
+                    <div class="input-group" >
+                        <input style="height: 40px;" name= "search_input" type="text" class="form-control search-bar"
+                        placeholder="Enter Center/Provider Name or Location and select corresponding option below"/>
+                        
+                        <div class="input-group-append" >
+                            <button id="search-btn" class="btn btn-primary search_btn" type="submit">
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="form-inline col-12">
+                    <label for="">Search By:</label>
+                    <div class="custom-control custom-radio ml-2">
+                        <input type="radio" id="centreNRadio" name="searchRadio" class="custom-control-input" value= "centreName" checked="" >
+                        <label class="custom-control-label" for="centreNRadio">Centre name</label>
+                    </div>
+                    <div class="custom-control custom-radio ml-2">
+                        <input type="radio" id="centreLRadio" name="searchRadio" class="custom-control-input" value= "centreLocation">
+                        <label class="custom-control-label" for="centreLRadio">Centre location</label>
+                    </div>
+                    <div class="custom-control custom-radio ml-2">
+                        <input type="radio" id="providerNRadio" name="searchRadio" class="custom-control-input" value= "providerName">
+                        <label class="custom-control-label" for="providerNRadio">Provider name </label>
+                    </div>
+                    <select class="custom-select ml-5" name="service">
+                        <option selected="" value ="all">All Services</option>
+                        <option value="GP">GP</option>
+                        <option value="Physiotherapist">Physiotherapist</option>
+                        <option value="Pharmacist">Pharmacist</option>
+                        <option value="Pathologist">Pathologist</option>
+                    </select>
+                </div>
+            </div>
+            
+        </form>
+        <br><p class="text-warning ml-4"> {{message}} </p>
+        
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 pt-3">
+        {% if noresult %}
+        <p class="text-muted text-center">No results. Perhaps try another search?</p>
+        {% endif %}
+        {% for i in results %}
+        <div class="card bg-primary mb-3 col-12 p-0 text-white" >
+            <div class="card-body">
+                <h4 class="card-title text-capitalize">
+					{% if category == "centreName" or category == "centreLocation" %}
+							<a href="{{ url_for('view_centre', name=i.get_name()) }}">
+					{% else %}
+							<a href="{{ url_for('view_provider', name=i.get_name()) }}">
+					{% endif %}
+					{{i.get_name()}}</a>
+		 			<span class="text-muted">{{i.get_avg_rating()}} out of 5 Stars</span>
+				</h4>
+                <em class="card-text">
+                    Services:
+					{% if category == "centreName" or category == "centreLocation" %}
+						{% if (i._health_providers)|length == 0 %}
+							No services offered
+						{% else %}
+							{% for j in (i.get_set_of_professions()) %}
+								{{j}}
+							{% endfor %}
+						{% endif %}
+					{% else %}
+						{{i.get_profession()}}
+					{% endif %}
+                </em> <br>
+                <em class="card-text">
+                    {% if category == "providerName" or category == "providerService" %}
+						{% if (i._centres)|length == 0 %}
+							No affiliated centres
+						{% else %}
+                    		Affiliated Centres:
+		                    {% for centre in i._centres %}
+		                        {{centre.get_centre_name()}},
+		                    {% endfor %}
+						{% endif %}
+                    {% else %}
+                        {{i.get_location().get_suburb()}}
+                    {% endif %}
+                </em>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}

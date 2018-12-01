@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex align-content-start flex-wrap" style="margin: 20px Auto;">
+    <div class="form-group" style="width: 30vw; min-width: 250px;">
+        <form action="/" method="POST">
+            
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Email">
+            
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Enter Password">
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+</div>
+{% if success %}
+<p> {{success}} </p>
+{% endif %}
+{% endblock content %}

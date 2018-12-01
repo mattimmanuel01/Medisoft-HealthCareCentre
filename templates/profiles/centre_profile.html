@@ -1,0 +1,83 @@
+{% extends 'base.html'%}
+{% block content %}
+
+<div class="container-fluid" align="center">
+	<h1 class="text-capitalize"> {{centre.get_name()}} Profile </h1>
+    <p class="text-muted"><em>{{centre.get_avg_rating()}} out of 5 stars</em></p>
+</div>
+
+<div>
+	
+	<h3> 
+		Location: 
+		<p> {{centre.get_location()}} </p>
+
+	</h3>
+    
+    {% if not noProviders%}
+	<h4> 
+		Services: 
+		{% for i in centre.get_set_of_professions() %}
+			<p>{{i}}</p>
+		{% endfor %}
+
+		 <!-- Going to have buttons later but for now just a list of serivices will be good enough
+		<button id = "GP" type="button" class="btn btn-primary"> GP </button>
+		<button id = "Phyiso" type="button" class="btn btn-primary"> Phyiso </button>
+		<button id = "Pathology" type="button" class="btn btn-primary"> Pathology </button>
+		<button id = "Pharmacist" type="button" class="btn btn-primary"> Pharmacist </button> -->
+
+	</h4>
+    {% endif %}
+</div>
+
+
+<div>
+    {% if not noProviders%}
+		<br/>
+		<table class="table table-hover">
+			<thead>
+			  <tr>
+				<th scope="col">Name</th>
+				<th scope="col">Specality</th>
+				<th scope="col">Booking</th>
+			  </tr>
+			</thead>
+		
+		<tbody>
+		{% for i in centre.get_providers() %}
+		<tr class="table-primary">
+			<th  class="text-capitalize" scope="row">{{i.get_name()}}</th>
+			<td> {{i.get_profession()}}</td>
+			<td>
+                {% if not is_provider %}
+				<form method="POST">
+					<button type="submit"  name= "provider" id = "Book" type="button" value= "{{i.get_name()}}" class="btn btn-secondary"> Book </button>
+				<input hidden type="text" name= "centreObject", value="{{centre.get_name()}}" placeholder="centre"> 
+				</form>
+                {% endif %}
+			</td>
+		</tr>
+		{% endfor %}
+        {% else %}
+        <p>There are currently no providers working at this centre.<p>
+		</tbody>
+		</table>
+        {% endif %}
+		
+
+		 
+		<br/>
+
+</div>
+
+
+
+<div class="row">
+    {% include 'rating.html' %}
+</div>
+
+{% endblock content %}
+{% block scripts %}
+{% endblock scripts %}
+

@@ -1,0 +1,33 @@
+<div class="col-sm-6 col-12">
+    <form method="POST">
+        <div class="form-inline mb-2">
+            <h4 class=""> Provide a Rating: </h4>
+            <button id = "1" name= "rating" value="1" type="submit" class="btn btn-primary mx-1 {%if is_provider%}disabled{%endif%}"> 1  </button>
+            <button id = "2" name= "rating" value="2" type="submit" class="btn btn-primary mr-1 {%if is_provider%}disabled{%endif%}"  > 2  </button>
+            <button id = "3" name= "rating" value="3" type="submit" class="btn btn-primary mr-1 {%if is_provider%}disabled{%endif%}" > 3  </button>
+            <button id = "4" name= "rating" value="4" type="submit" class="btn btn-primary mr-1 {%if is_provider%}disabled{%endif%}" >  4  </button>
+            <button id = "5" name= "rating" value="5" type="submit" class="btn btn-primary mr-1 {%if is_provider%}disabled{%endif%}" > 5   </button>
+        </div>
+        <textarea class="form-control col-12 mb-2" name="feedback" rows="3" {%if is_provider%}placeholder="Cannot Review as a Provider" disabled=""{%else%}placeholder="enter review and click rating to submit"{%endif%}></textarea>
+    </form>
+</div>
+<div class="col-sm-6 col-12">
+    <h4 class="ml-3"> Ratings: </h4>
+    <div class="col-12">
+        {% if ratings %}
+        {% for rating in ratings%}
+        <div class="bg-secondary mb-3">
+            <div class="card-header">{{rating.get_rating()}} out of 5 stars</div>
+            <div class="card-body">
+                <h4 class="card-title text-capitalize">Reviewer: {{rating.get_reviewer().get_name()}}</h4>
+                <p class="card-text">{{rating.get_feedback()}}</p>
+            </div>
+        </div>
+        {% endfor %}
+        
+        {% endif %}
+        {% if ratings == None %} 
+        <p> <i> No Current Ratinngs </i>  </p>
+        {% endif %}
+    </div>
+</div>

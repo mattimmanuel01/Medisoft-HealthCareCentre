@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<br> <br>
+<div class="row ">
+    <!-- sidebar -->
+    <div class="col-md-3 mb-2">
+        <div class="card text-white bg-info">
+            <div class="card-header"><b>Provider:{{profile.get_name()}}</b></div>
+            <div class="card-body">
+                <h4 class="card-title">{{profile.get_name()}}</h4>
+                <p class="card-text">{{centre.get_name()}}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- time slots -->
+    <div class="col-md-9">
+
+        {% for day in range(0,n_days) %}
+            <div class="col-12 bg-secondary" style="width:100%; padding: 10px 20px;"> <h3>{{days[day]}}</h3></div>
+            <div class="col-12 p-3">
+            {% for slot in roster[day] %}
+                {% if not slot.is_booked() %}
+                <form action="/appointments" method="POST" class="bg-info" style="max-width:90px;display:inline;">
+                    <button type="submit" name="time_slot" value= "{{slot.get_time().time()}}" class="btn btn-primary timeslot btn-lg">{{slot.get_time().time()}}</button>
+                    <input style="display:none;"type="text" name= "provider_email", value="{{profile.get_id()}}">
+                    <input style="display:none;" type="text" name= "day", value="{{days[day]}}">
+                    <input style="display:none;" type="text" name= "centre_name", value="{{centre.get_name()}}">
+                    <label for="exampleTextarea">Enter Reason For Booking</label>
+                    <textarea class="form-control" name="booking_reason" rows="3" maxlength="1000"></textarea> 
+
+                </form>
+                {% endif %}
+            {% endfor %}
+            </div>
+        {% endfor %}     
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+{% endblock scripts %}

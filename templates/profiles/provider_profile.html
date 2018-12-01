@@ -1,0 +1,54 @@
+{% extends 'base.html'%}
+{% block content %}
+
+<div class="container-fluid" align="center">
+	<h1 class="text-capitalize"> {{provider.get_name()}} </h1>
+    <p class="text-muted"><em>{{provider.get_avg_rating()}} out of 5 stars</em></p>
+</div>
+<div>
+		<br/>
+		
+			<p>Profession: {{provider.get_profession()}}</p>
+		   
+		{% if not noCentres%}
+		<table class="table table-hover">
+			<thead>
+			  <tr>
+				<th scope="col">Affiliated Centre</th>
+				<th scope="col">Booking</th>
+			  </tr>
+			</thead>
+		
+		<tbody>
+		{% for centre in centres %}
+		<tr class="table-primary">
+			<th scope="row">{{centre.get_centre_name()}}</th>
+			<td>
+                {% if not is_provider %}
+				<form method="POST">
+					<button type="submit" name= "provider" id="Book" value= "{{provider.get_id()}}" class="btn btn-secondary"> Book </button>
+					<input hidden type="text" name= "centre", value="{{centre.get_centre_name()}}" placeholder="centre">
+				</form>
+                {% endif %}
+			</td>
+		</tr>
+		{% endfor %}
+		</tbody>
+		</table>
+		
+		<br/>
+        {% else %}
+        <p>This provider does not currently work at any centre</p>
+        {% endif %}
+</div>
+
+<div class="row">
+    {% include 'rating.html' %}
+    
+</div>
+
+{% endblock content %}
+{% block scripts %}
+{% endblock scripts %}
+
+

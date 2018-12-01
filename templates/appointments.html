@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<br><br>
+<div class="row">	
+	<!-- slots -->
+    <div class="col-md-12">
+        <div class="row px-3">
+
+			{% if appointments == False and view == False %}
+				Please select another time
+			{% elif appointments == False and view == True %}
+				No appointments
+			{% else %}
+		        {% for i in appointments %}
+		        <div class="card bg-primary mb-3 col-12 p-0 text-white" >
+		            <div class="card-body">
+		                <h4 class="card-title">
+		                    {{i.get_time()}},
+		                    {{i.get_date()}},
+							{{i.get_centre().get_name()}}
+							</h4>
+		                <em class="card-text text-capitalize">
+							{% if isProvider == True %}
+								Patient: {{i.get_patient().get_name()}}
+							{% else %}
+				                Provider: {{i.get_provider().get_name()}}
+							{% endif %}
+							<br>
+							Reason: {{i.get_reason()}}
+		                </em>
+		            </div>
+					{% if isProvider %}
+					<form class="form-inline" method="POST">
+						<button class="btn btn-secondary float-left mr-1" name="details" type="submit" value="{{loop.index0}}">Details</button>
+					</form>
+					{% endif %}
+				</div>
+				{% endfor %}
+			{% endif %}
+            
+        
+        </div>
+    </div>
+
+
+    
+</div>
+{% endblock content %}
+

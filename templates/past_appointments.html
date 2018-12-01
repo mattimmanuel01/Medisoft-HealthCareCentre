@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<br><br>
+<div class="row">	
+	<!-- slots -->
+    <div class="col-md-12">
+        {% if pHistory == True %}
+        <h1 class="text-capitalize"> viewing history for: {{patient.get_name()}}</h1><br>
+        {% endif %}
+        <div class="row px-3">
+			{% if PastAppointments == False %}
+				No Past Appointments
+			{% else %}
+		        {% for i in PastAppointments %}
+		        <div class="card bg-primary mb-3 col-12 p-0 text-white" >
+		            <div class="card-body">
+		                <h4 class="card-title">
+		                    {{i.get_time()}},
+		                    {{i.get_date()}},
+							{{i.get_centre().get_name()}}
+							</h4>
+		                <em class="card-text">
+							{% if isProvider == True %}
+								Patient: {{i.get_patient().get_name()}}
+							{% else %}
+				                Provider: {{i.get_provider().get_name()}}
+							{% endif %}
+							<br>
+							Reason: {{i.get_reason()}}
+                            <br>
+                            Medicines:
+                            {{ i.get_visit_info()._medicines }}
+                             
+                            
+                            <br>
+                            Notes: {{i.get_visit_info()._notes}}
+		                </em>
+		            </div>
+					{% if isProvider %}
+                    <form class="form-inline" action="{{url_for('view_patient_history', patient=i.get_patient().get_id())}}">
+                        <button class="btn btn-secondary float-left mr-1" name="phistory" type="submit" value="{{i.get_patient().get_id()}}">Patient History</button>
+					</form>
+					{% endif %}
+				</div>
+				{% endfor %}
+			{% endif %}
+            
+        
+        </div>
+    </div>
+
+
+    
+</div>
+{% endblock content %}
+

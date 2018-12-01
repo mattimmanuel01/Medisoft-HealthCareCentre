@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row" style="min-height:80vh;">
+    <div class="col-4">
+        <div class=" jumbotron bg-secondary" style="min-height:100%">
+            <h1 class="text-capitalize">{{appointment.get_patient().get_name()}} </h1>
+            <p class="lead"><em>{{appointment.get_date()}}</em> at<em> {{appointment.get_time()}}</em></p>
+            <p class="text-muted">
+            {% if appointment.get_reason()|length != 0 %}
+                "{{appointment.get_reason()}}"
+            {% else %}
+                <em>No reason has been left</em>
+            {% endif %}
+            </p>
+            
+            <form class="form-inline" action="{{url_for('view_patient_history', patient=appointment.get_patient().get_id())}}">
+                <button class="btn btn-primary float-left mr-1" name="phistory" type="submit" value="{{appointment.get_patient().get_id()}}">Patient History</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-8 pl-3">
+        <div class="input-group">
+            <!--        medicine input-->
+            <input maxlength="100" style="height: 40px;" id="add_med" name="add_med" type="text" class="form-control addmed-bar"
+            placeholder="Enter Medicine Name"/>
+            <!--        other notes input-->
+            <div class="input-group-append">
+                <button id="addmed-btn" class="btn btn-primary" type="button" onclick="addItem()">
+                    Add
+                </button>
+            </div>
+        </div>
+        <br>
+        <form class="form" method="POST">
+            <!--        hidden data-->
+            <input type="hidden" name="curr_appt" value="{{index}}">
+            <h4 class="ml-1"> Added Medicines:</h4>
+    <!--    display medicines added -->
+            <ul class="list-group mb-3" id="meds" style="list-style: none;">
+                {% for med in medicines %}
+                <li class = "list-group-item">
+                    <div class="card-body">
+                        <h4 class="card-title">
+                                {{med}}
+                        </h4>
+    <!--    add ability to remove added meds  -->
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+
+            <div>
+                {% for med in medicines %}
+                <div></div>
+                {% endfor %}
+            </div>
+            
+    <!--     extra info input       -->
+            <br>
+            <h4 class="ml-1"> Important Notes:</h4>
+            <textarea class="form-control mt-3" id="apptinfo" name="apptinfo" rows="4" placeholder="Notes..." maxlength="1000"></textarea>
+            <br>
+            <button class="btn btn-primary float-right" name="save">Save Notes and end session</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+{% block scripts %}
+<script>
+    var n_meds = 0;
+    function addItem(){
+        var li = document.createElement("LI");
+        var input = document.getElementById("add_med");
+        var final_innerHTML = '<li class = "list-group-item">'+input.value+'<input type="hidden" name="medList"'+n_meds+' value="'+input.value+'"></li>'
+        li.innerHTML = final_innerHTML;
+        input.value = "";
+        document.getElementById("meds").appendChild(li);
+        
+        n_meds = n_meds+1;
+    }
+</script>
+{% endblock scripts %}
